@@ -60,6 +60,9 @@ public class Main {
         albums.get(4).addToPlayList("Teri Ore", playList_1);
         albums.get(5).addToPlayList("Lungi Dance", playList_1);
 
+        createPlaylist("sample.csv", playList_1);
+        exportPlaylist(playList_1, "exported_playlist.tsv");
+
         play(playList_1);
     }
 
