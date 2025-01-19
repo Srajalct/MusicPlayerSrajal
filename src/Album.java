@@ -196,4 +196,12 @@ public class Album
     {
         return artist;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
