@@ -66,6 +66,66 @@ public class Main {
         play(playList_1);
     }
 
+    private static void createPlaylist(String fileName, LinkedList<Song> playList)
+    {
+        System.out.println("Creating playlist from file: " + fileName);
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName)))
+        {
+            String line;
+            while ((line = reader.readLine()) != null)
+            {
+                String[] data = line.split(",");
+                if (data.length >= 3)
+                {
+                    String albumName = data[0].trim();
+                    String songTitle = data[1].trim();
+                    double duration = Double.parseDouble(data[2].trim());
+
+                    Album album = albums.stream()
+                            .filter(a -> a.getName().equalsIgnoreCase(albumName))
+                            .findFirst()
+                            .orElse(null);
+
+                    if (album != null)
+                    {
+                        Song song = album.findSong(songTitle);
+                        if (song != null)
+                        {
+                            playList.add(song);
+                            System.out.println("Added song: " + songTitle + " from album: " + albumName);
+                        }
+                    }
+                }
+            }
+        }
+        catch (IOException e)
+        {
+            System.err.println("Error reading file: " + e.getMessage());
+        }
+        catch (NumberFormatException e)
+        {
+            System.err.println("Invalid song duration in file.");
+        }
+    }
+
+    private static void exportPlaylist(LinkedList<Song> playList, String fileName)
+    {
+        System.out.println("Exporting playlist to file: " + fileName);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName)))
+        {
+            writer.write("Title\tArtist\tDuration\n");
+            for (Song song : playList)
+            {
+                writer.write(song.getTitle() + "\t" + song.getArtist() + "\t" + song.getDuration() + "\n");
+            }
+            System.out.println("Playlist successfully exported to: " + fileName);
+        }
+        catch (IOException e)
+        {
+            System.err.println("Error writing to file: " + e.getMessage());
+        }
+    }
+
 
     private static void play(LinkedList<Song> playList)
     {
